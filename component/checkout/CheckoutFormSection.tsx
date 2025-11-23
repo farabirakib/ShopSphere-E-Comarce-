@@ -1,22 +1,26 @@
 import React, { FC } from "react";
 
+type FormDataType = {
+  name: string;
+  address: string;
+  phone: string;
+  size: string;
+};
+
+type CartItem = {
+  product: { id: string | number };
+};
+
 export const CheckoutFormSection: FC<{
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  formData: { name: string; address: string; phone: string; size: string };
+  formData: FormDataType;
   handleInputChange: React.ChangeEventHandler<
     HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
   >;
-  setFormData: React.Dispatch<
-    React.SetStateAction<{
-      name: string;
-      address: string;
-      phone: string;
-      size: string;
-    }>
-  >;
-  cart: { product: { id: string | number } }[];
+  setFormData: React.Dispatch<React.SetStateAction<FormDataType>>;
+  cart: CartItem[];
   insideDhaka?: boolean;
-  setInsideDhaka?: React.Dispatch<React.SetStateAction<any>>;
+  setInsideDhaka?: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({
   handleSubmit,
   formData,
@@ -26,47 +30,52 @@ export const CheckoutFormSection: FC<{
   insideDhaka,
   setInsideDhaka,
 }) => {
+  const productId = cart[0]?.product?.id ?? "default";
+
   return (
     <form onSubmit={handleSubmit}>
+      {/* SIZE FIELD */}
       <div className="relative mb-6">
         <select
           required
-          id={`size-${cart[0]?.product.id}`}
+          id={`size-${productId}`}
           name="size"
           value={
             formData.size ||
             (typeof window !== "undefined"
-              ? localStorage.getItem(`size-${cart[0]?.product.id}`) ?? ""
+              ? localStorage.getItem(`size-${productId}`) ?? ""
               : "")
           }
           onChange={(e) => {
-            const { value } = e.target;
+            const value = e.target.value;
+
             setFormData((prev) => ({ ...prev, size: value }));
 
             if (typeof window !== "undefined") {
-              localStorage.setItem(`size-${cart[0]?.product.id}`, value);
+              localStorage.setItem(`size-${productId}`, value);
             }
           }}
           className="border w-full h-12 border-gray-300 rounded-md px-2 py-1 bg-white text-black"
         >
-          <>
-            <option value="" disabled>
-              Select size
+          <option value="" disabled>
+            Select size
+          </option>
+          {["M", "L", "XL"].map((size) => (
+            <option key={size} value={size}>
+              {size}
             </option>
-            {["M", "L", "XL"].map((size) => (
-              <option key={size} value={size}>
-                {size}
-              </option>
-            ))}
-          </>
+          ))}
         </select>
+
         <label
-          htmlFor={`size-${cart[0]?.product.id}`}
+          htmlFor={`size-${productId}`}
           className="absolute -top-2.5 left-3 text-sm text-gray-600 bg-white px-1"
         >
           Size
         </label>
       </div>
+
+      {/* NAME */}
       <div className="relative mb-6">
         <input
           type="text"
@@ -80,13 +89,16 @@ export const CheckoutFormSection: FC<{
         />
         <label
           htmlFor="name"
-          className="absolute -top-2.5 left-3 text-sm text-gray-600 bg-white px-1 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-[#0B1A3A]"
+          className="absolute -top-2.5 left-3 text-sm text-gray-600 bg-white px-1 transition-all"
         >
           পূর্ণ নাম
         </label>
       </div>
+
+      {/* LOCATION */}
       <div className="relative mb-6 text-black">
-        <div className="text-sm font-medium  mb-2">অবস্থান</div>
+        <div className="text-sm font-medium mb-2">অবস্থান</div>
+
         <div className="flex items-center gap-4">
           <label className="inline-flex items-center gap-2">
             <input
@@ -94,30 +106,33 @@ export const CheckoutFormSection: FC<{
               name="location"
               value="inside"
               checked={insideDhaka === true}
-              onChange={() => setInsideDhaka && setInsideDhaka(true)}
+              onChange={() => setInsideDhaka?.(true)}
               required
               className="h-4 w-4 text-[#0B1A3A] border-gray-300"
             />
-            <span className="text-sm">ঢাকার ভেতর </span>
+            <span className="text-sm">ঢাকার ভেতর</span>
           </label>
+
           <label className="inline-flex items-center gap-2">
             <input
               type="radio"
               name="location"
               value="outside"
               checked={insideDhaka === false}
-              onChange={() => setInsideDhaka && setInsideDhaka(false)}
+              onChange={() => setInsideDhaka?.(false)}
               className="h-4 w-4 text-[#0B1A3A] border-gray-300"
             />
             <span className="text-sm">ঢাকার বাইরে</span>
           </label>
         </div>
+
         <div className="text-xs text-gray-500 mt-1">
-          একটি অপশন নির্বাচন করুন — ঢাকার ভেতর হলে ডেলিভারি চার্জ 60 টাকা ,
-          ঢাকার বাইরে: 120 টাকা।
+          একটি অপশন নির্বাচন করুন — ঢাকার ভেতর ডেলিভারি চার্জ: 70 টাকা,  
+          ঢাকার বাইরে: 130 টাকা।
         </div>
       </div>
 
+      {/* ADDRESS */}
       <div className="relative mb-6">
         <input
           type="text"
@@ -131,12 +146,13 @@ export const CheckoutFormSection: FC<{
         />
         <label
           htmlFor="address"
-          className="absolute -top-2.5 left-3 text-sm text-gray-600 bg-white px-1 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-[#0B1A3A]"
+          className="absolute -top-2.5 left-3 text-sm text-gray-600 bg-white px-1 transition-all"
         >
           অবস্থান / ঠিকানা
         </label>
       </div>
 
+      {/* PHONE */}
       <div className="relative mb-6">
         <input
           type="tel"
@@ -150,11 +166,13 @@ export const CheckoutFormSection: FC<{
         />
         <label
           htmlFor="phone"
-          className="absolute -top-2.5 left-3 text-sm text-gray-600 bg-white px-1 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-[#0B1A3A]"
+          className="absolute -top-2.5 left-3 text-sm text-gray-600 bg-white px-1 transition-all"
         >
           ফোন নম্বর
         </label>
       </div>
+
+      {/* SUBMIT BUTTON */}
       <button
         type="submit"
         className="w-full py-3 bg-[#0B1A3A] text-white rounded-md text-lg font-medium cursor-pointer transition-colors hover:text-[#D4AF37]"

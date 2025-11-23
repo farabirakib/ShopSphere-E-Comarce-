@@ -1,8 +1,8 @@
 import React from "react";
 
 const charges = [
-  { area: "ঢাকার মধ্যে", price: "60 টাকা" },
-  { area: "ঢাকার বাইরে", price: "120 টাকা" },
+  { area: "ঢাকার মধ্যে", price: "70 টাকা" },
+  { area: "ঢাকার বাইরে", price: "130 টাকা" },
 ];
 
 const times = [

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { CartPageProps } from "../type";
 import ShippingPolicy from "../shipping-policy/ShippingPolicy";
 import SummarySection from "./SummarySection";
@@ -9,13 +10,18 @@ const CartPage = ({
   removeFromCart,
   handleCheckout,
 }: CartPageProps) => {
+
+  // Delivery Location State
+  const [location, setLocation] = useState("dhaka");
+
+  const shipping = location === "dhaka" ? 70 : 130;
+
   const subtotal = cart.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0
   );
-  const shipping = 120.0;
-  // const total = subtotal + shipping;
-  const total = subtotal;
+
+  const total = subtotal + shipping;
 
   if (cart.length === 0) {
     return (
@@ -40,25 +46,29 @@ const CartPage = ({
         </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-8 items-start">
-          {/* Cart Items */}
           <CartItemSection
             cart={cart}
             removeFromCart={removeFromCart}
             updateCartQuantity={updateCartQuantity}
           />
+
           {/* Order Summary */}
-        </div>
-        <div className=" grid grid-cols-2 gap-5">
           <SummarySection
             handleCheckout={handleCheckout}
             shipping={shipping}
             subtotal={subtotal}
             total={total}
+            location={location}
+            setLocation={setLocation}
           />
+        </div>
+
+        <div className="grid grid-cols-2 gap-5">
           <ShippingPolicy />
         </div>
       </div>
     </section>
   );
 };
+
 export default CartPage;
