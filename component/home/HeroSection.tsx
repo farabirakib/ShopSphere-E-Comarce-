@@ -1,38 +1,125 @@
-import { HeroProps } from "../type";
+"use client";
+import { useState, useEffect } from "react";
 
-const Hero = ({ setCurrentPage }: HeroProps) => (
-  <section
-    className="relative h-[60vh] bg-cover bg-center text-white flex flex-col justify-center items-center text-center md:text-left"
-    style={{
-      backgroundImage: `url('banner.png')`, // 👉 তোমার image path এখানে দাও
-    }}
-  >
-    {/* Overlay */}
-    {/* <div className="absolute inset-0 bg-black/50"></div> */}
+interface SlideType {
+  title: string;
+  subtitle: string;
+  description: string;
+  buttonText: string;
+  img: string;
+}
 
-    {/* Content */}
-    <div className="relative z-10 w-full h-full flex flex-col justify-center md:justify-between p-6 md:p-12">
-      {/* Center Text */}
-      <div className="flex flex-col justify-center items-center md:items-start text-center md:text-left flex-grow">
-        <h3 className="text-lg max-w-2xl mx-auto md:mx-0 mb-4"> NEW SEASON</h3>
-        <h1 className="text-4xl text-[#D4AF37] md:text-5xl font-bold mb-4">
-          FASHION SALE
-        </h1>
-        <p className="text-lg max-w-2xl mx-auto md:mx-0 mb-8">
-          Browse our new collection and find your next favorite outfit.
-        </p>
-      </div>
+const slides: SlideType[] = [
+  {
+    title: "NEW SEASON",
+    subtitle: "FASHION SALE",
+    description: "Browse our new collection and find your next favorite outfit.",
+    buttonText: "Shop Now",
+    img: "/banner.png",
+  },
+  {
+    title: "SUMMER COLLECTION",
+    subtitle: "HOT DEALS",
+    description: "Discover trendy summer outfits at amazing discounts.",
+    buttonText: "Explore",
+    img: "/lm101.jpg",
+  },
+  {
+    title: "WINTER ARRIVALS",
+    subtitle: "STAY WARM",
+    description: "New jackets, hoodies & more winter essentials now available.",
+    buttonText: "Buy Now",
+    img: "/lm110.jpg",
+  },
+];
 
-      {/* Bottom Left Button */}
-      <div className="flex justify-center md:justify-start">
-        <button
-          className="bg-[#0B1A3A] text-[#D4AF37] py-3 px-8 rounded-md font-medium cursor-pointer transition-colors hover:text-white"
-          onClick={() => setCurrentPage("shop")}
+const Hero = ({ setCurrentPage }: any) => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  };
+
+  return (
+    <section className="relative h-[35vh] sm:h-[50vh] md:h-[92vh] overflow-hidden">
+
+      {slides.map((slide, index) => (
+        <div
+          key={index}
+          className={`absolute inset-0 transition-all duration-700 ease-in-out 
+            ${index === currentSlide ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"}`}
+          style={{
+            backgroundImage: `url(${slide.img})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
         >
-          Shop Now
-        </button>
+
+          <div className="absolute inset-0 bg-black/10" />
+
+          <div className="relative z-10 h-full flex flex-col justify-center items-center md:items-start text-center md:text-left px-6 md:px-12">
+            <h3 className="text-sm sm:text-base md:text-lg mb-2 sm:mb-3 text-white">
+              {slide.title}
+            </h3>
+
+            <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-3 sm:mb-4 text-[#D4AF37]">
+              {slide.subtitle}
+            </h1>
+
+            <p className="max-w-xl text-xs sm:text-sm md:text-lg mb-4 sm:mb-6 text-white">
+              {slide.description}
+            </p>
+
+            <button
+              onClick={() => setCurrentPage("shop")}
+              className="bg-gray-700 text-[#D4AF37] py-2 sm:py-3 px-6 sm:px-8 rounded-md hover:text-white transition"
+            >
+              {slide.buttonText}
+            </button>
+          </div>
+        </div>
+      ))}
+
+      {/* Navigation Buttons */}
+      <button
+        onClick={prevSlide}
+        className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 text-white p-3 rounded-full hover:bg-black/60"
+      >
+        ❮
+      </button>
+
+      <button
+        onClick={nextSlide}
+        className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 text-white p-3 rounded-full hover:bg-black/60"
+      >
+        ❯
+      </button>
+
+      {/* Dots */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+        {slides.map((_, i) => (
+          <div
+            key={i}
+            onClick={() => setCurrentSlide(i)}
+            className={`h-3 w-3 rounded-full cursor-pointer transition 
+              ${i === currentSlide ? "bg-white" : "bg-white/40"}`}
+          />
+        ))}
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
+
 export default Hero;

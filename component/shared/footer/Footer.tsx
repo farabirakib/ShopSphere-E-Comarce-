@@ -86,7 +86,7 @@ const socialLinks: {
 ];
 
 const Footer = ({ setCurrentPage }: FooterProps) => (
-  <footer className="bg-gray-800 text-gray-400 pt-16 pb-8">
+  <footer className="bg-[#0B1A3A] text-gray-400 pt-16 pb-8">
     <div className="container mx-auto px-4 lg:px-8">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
         <div>
