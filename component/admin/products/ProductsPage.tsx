@@ -7,28 +7,37 @@ import useApi from "@/component/liveflashback/utils/useApi";
 import { handleAxiosError } from "@/component/liveflashback/utils/handleAxiosError";
 
 const ProductsPage = () => {
-  const [products, setProducts] = useState<any[]>([]);
-  const { setMessage } = useTemplate();
-  const { get } = useApi();
+  // const [products, setProducts] = useState<any[]>([]);
+  // const { setMessage } = useTemplate();
+  // const { get } = useApi();
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const res = await get<any>(`AddProduct`);
+  //       setProducts(res);
+  //     } catch (ex: any) {
+  //       setMessage("error", handleAxiosError(ex));
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
+
+  const [products, setProducts] = useState<any>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await get<any>(`AddProduct`);
-
-        console.log(res ,"res")
-        const payload = Array.isArray(res)
-           
-  
-        setProducts(payload);
-      } catch (ex: any) {
-        setMessage("error", handleAxiosError(ex));
-      }
-    };
     fetchData();
   }, []);
 
-console.log(products,"products")
+  const fetchData = async () => {
+    try {
+      const res = await fetch("https://admin.ashaa.xyz/api/AddProduct");
+      const json = await res.json();
+      setProducts(json);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   return (
     <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm">
@@ -68,44 +77,52 @@ console.log(products,"products")
             </tr>
           </thead>
           <tbody>
-            {products && products.length > 0 ? products.map((product) => (
-              <tr
-                key={product.id}
-                className="border-b border-slate-200 last:border-b-0 hover:bg-slate-50"
-              >
-                <td className="p-4 text-slate-700 font-medium">
-                  {product.name}
-                </td>
-                <td className="p-4 text-slate-700">{product.category}</td>
-                <td className="p-4 text-slate-700">{product.price}</td>
-                <td
-                  className={`p-4 font-medium ${
-                    product.stock > 0 ? "text-slate-700" : "text-red-600"
-                  }`}
+            {products && products.length > 0 ? (
+              products.map((product: any) => (
+                <tr
+                  key={product.id}
+                  className="border-b border-slate-200 last:border-b-0 hover:bg-slate-50"
                 >
-                  {product.stock}
-                </td>
-                <td className="p-4">
-                  <StatusBadge status={product.status} />
-                </td>
-                <td className="p-4 flex gap-4">
-                  <a
-                    href="#"
-                    className="text-blue-600 hover:underline font-medium"
+                  <td className="p-4 text-slate-700 font-medium">
+                    {product.title}
+                  </td>
+                  <td className="p-4 text-slate-700">
+                    {product.categoryTitle}
+                  </td>
+                  <td className="p-4 text-slate-700">
+                    {product.priceSale || 0}
+                  </td>
+                  <td
+                    className={`p-4 font-medium ${
+                      product.isInStock > 0 ? "text-slate-700" : "text-red-600"
+                    }`}
                   >
-                    Edit
-                  </a>
-                  <a
-                    href="#"
-                    className="text-red-600 hover:underline font-medium"
-                  >
-                    Delete
-                  </a>
-                </td>
-              </tr>
-            )) : (
+                    {product.isInStock || 0}
+                  </td>
+                  <td className="p-4">
+                    <StatusBadge status={product.status} />
+                  </td>
+                  <td className="p-4 flex gap-4">
+                    <a
+                      href="#"
+                      className="text-blue-600 hover:underline font-medium"
+                    >
+                      Edit
+                    </a>
+                    <a
+                      href="#"
+                      className="text-red-600 hover:underline font-medium"
+                    >
+                      Delete
+                    </a>
+                  </td>
+                </tr>
+              ))
+            ) : (
               <tr>
-                <td colSpan={6} className="p-4 text-center text-slate-700">No products found.</td>
+                <td colSpan={6} className="p-4 text-center text-slate-700">
+                  No products found.
+                </td>
               </tr>
             )}
           </tbody>

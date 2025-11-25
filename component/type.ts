@@ -67,6 +67,9 @@ export interface Product {
   price: number;
   imageUrl: string | StaticImageData;
   category: Category;
+  sku?: string;
+  description?: string;
+  isInStock?: number;
 }
 
 export interface CartItem {

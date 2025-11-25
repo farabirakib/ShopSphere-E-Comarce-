@@ -9,6 +9,7 @@ export type TApiResponse<T> = {
   bkashURL?: string;
   perId?: string;
   donateId?: string;
+  res: any;
 };
 
 type TMethod = "get" | "post";

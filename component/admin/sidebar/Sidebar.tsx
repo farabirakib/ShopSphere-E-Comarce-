@@ -1,27 +1,21 @@
+import React from "react";
 import Link from "next/link";
 
 type SidebarProps = {
-  activePage: string;
-  setActivePage: (page: string) => void;
   isSidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
 };
 
-const Sidebar = ({
-  activePage,
-  setActivePage,
-  isSidebarOpen,
-  setSidebarOpen,
-}: SidebarProps) => {
+const Sidebar = ({ isSidebarOpen, setSidebarOpen }: SidebarProps) => {
   const menuItems = [
     "Dashboard",
-    "Orders",
-    "Products",
-    "Customers",
-    "Analytics",
-    "Settings",
+    "Order",
+    "Product",
+    "Customer",
+    "Analytic",
+    // "Settings",
   ];
-
+  const [activePage, setActivePage] = React.useState("Dashboard");
   return (
     <>
       <aside
@@ -30,28 +24,31 @@ const Sidebar = ({
         } lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 flex flex-col`}
       >
         <div className="p-6 text-center border-b border-slate-700">
-          <h2 className="text-xl font-bold">Liveflashback</h2>
+          <Link href="/" className="text-xl font-bold">
+            Liveflashback
+          </Link>
         </div>
         <nav className="flex-1 pt-4">
           <ul>
             {menuItems.map((item) => (
-              <li key={item}>
-                <Link
-                  href={`/${item.toLowerCase()}`}
-                  className={`block py-3.5 px-6 my-1 transition duration-200 ease-in-out border-l-4 ${
-                    activePage === item
-                      ? "bg-slate-700 border-blue-500 font-bold"
-                      : "border-transparent hover:bg-slate-700"
-                  }`}
+              <Link
+                href={`/manage/${item.toLowerCase()}`}
+                key={item}
+                className={`block py-3.5 px-6 my-1 transition duration-200 ease-in-out border-l-4 ${
+                  activePage === item
+                    ? "bg-slate-700 border-blue-500 font-bold"
+                    : "border-transparent hover:bg-slate-700"
+                }`}
+              >
+                <div
                   onClick={(e) => {
                     e.preventDefault();
                     setActivePage(item);
                   }}
-                  aria-current={activePage === item ? "page" : undefined}
                 >
                   {item}
-                </Link>
-              </li>
+                </div>
+              </Link>
             ))}
           </ul>
         </nav>

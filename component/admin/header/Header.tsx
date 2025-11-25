@@ -6,10 +6,8 @@ import { LogOut, User as UserIcon, Bell } from "lucide-react";
 import { UserContext } from "@/component/context/UserContext";
 
 const Header = ({
-  title,
   setSidebarOpen,
 }: {
-  title: string;
   setSidebarOpen: (open: boolean) => void;
 }) => {
   const { user, logout } = useContext(UserContext);
@@ -31,7 +29,7 @@ const Header = ({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
+  const title = "Admin Panel";
   return (
     <header className="p-4  sm:p-6 lg:p-4 flex justify-between items-center bg-slate-100 sticky top-0 z-20 shadow-sm">
       {/* Left: Title + Menu */}

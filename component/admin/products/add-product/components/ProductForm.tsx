@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { ProductStatus } from "../types";
 import { IconTag, IconArchive, IconCheckCircle } from "./icons";
 import FormField from "./FormField";
@@ -32,12 +32,14 @@ const ProductForm: React.FC = () => {
     setProduct((prev) => ({ ...prev, status }));
   };
 
-  const handleImageChange = (file: File | null) => {
-    setProduct((prev) => ({ ...prev, image: file }));
-  };
-
   return (
-    <form onSubmit={(e) => {e.preventDefault(); handleSubmit(e)}} className="space-y-8 max-w-4xl mx-auto">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit(e);
+      }}
+      className="space-y-8 max-w-4xl mx-auto"
+    >
       <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg border border-slate-200/80">
         <h1 className="text-3xl font-bold text-slate-900 mb-2">
           Add New Product
@@ -78,10 +80,7 @@ const ProductForm: React.FC = () => {
             />
           </div>
 
-          <ImageUpload
-            onImageChange={handleImageChange}
-            currentImage={product.image}
-          />
+          <ImageUpload currentImage={product.image} />
 
           <FormField
             label="Category"
