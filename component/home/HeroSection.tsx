@@ -22,14 +22,14 @@ const slides: SlideType[] = [
     subtitle: "HOT DEALS",
     description: "Discover trendy summer outfits at amazing discounts.",
     buttonText: "Explore",
-    img: "/lm101.jpg",
+    img: "/banner.png",
   },
   {
     title: "WINTER ARRIVALS",
     subtitle: "STAY WARM",
     description: "New jackets, hoodies & more winter essentials now available.",
     buttonText: "Buy Now",
-    img: "/lm110.jpg",
+    img: "/banner.png",
   },
 ];
 
