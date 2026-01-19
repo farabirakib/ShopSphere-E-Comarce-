@@ -185,7 +185,6 @@ const Footer = ({ setCurrentPage }: FooterProps) => (
 
       <div className="border-t border-gray-700 text-center pt-8 text-sm">
         <p>© 2025 liveflashback. All Rights Reserved.</p>
-        <p>© 2025 liveflashback. All Rights Reserved.</p>
       </div>
     </div>
   </footer>
